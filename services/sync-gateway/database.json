@@ -1,0 +1,28 @@
+{
+  "bucket": "main",
+  "guest": {
+    "disabled": false,
+    "admin_channels": ["*"]
+  },
+  "import_docs": true,
+  "num_index_replicas": 0,
+  "enable_shared_bucket_access": true,
+  "scopes": {
+    "technician": {
+      "collections": {
+        "work_orders": {
+          "sync": "function(doc, oldDoc) { channel('!'); if (doc.assigned_to) { channel('technician.' + doc.assigned_to); } channel('all_work_orders'); }",
+          "import_filter": "function(doc) { return true; }"
+        },
+        "instructions": {
+          "sync": "function(doc, oldDoc) { channel('!'); if (doc.work_order_id) { channel('instructions.' + doc.work_order_id); } channel('all_instructions'); }",
+          "import_filter": "function(doc) { return true; }"
+        },
+        "work_logs": {
+          "sync": "function(doc, oldDoc) { channel('!'); if (doc.technician_id) { channel('technician.' + doc.technician_id); } channel('all_work_logs'); }",
+          "import_filter": "function(doc) { return true; }"
+        }
+      }
+    }
+  }
+}

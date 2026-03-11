@@ -1,0 +1,28 @@
+name: workspace
+description: "Tele2 Field Technician App"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  permission_handler: ^12.0.1
+  image_picker: ^1.0.7
+  intl: ^0.19.0
+  connectivity_plus: ^6.0.3
+  speech_to_text: ^7.0.0
+  shared_preferences: ^2.3.0
+  couchbase_lite_p2p:
+    path: packages/couchbase_lite_p2p
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

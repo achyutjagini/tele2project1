@@ -1,0 +1,49 @@
+#!/bin/sh
+set -e
+
+. "$(dirname "$0")/init"
+
+# Start socat for iOS (if needed)
+echo "Starting socat for iOS..."
+sudo socat UNIX-LISTEN:/var/run/usbmuxd,fork,reuseaddr,unlink-early TCP:host.docker.internal:2345 &
+
+# Connect to Android device (Redroid or host emulator)
+ADB_TARGET="${ADB_TARGET:-host.docker.internal:5555}"
+echo "Connecting to Android device at $ADB_TARGET..."
+adb connect "$ADB_TARGET" || echo "Failed to connect to device at $ADB_TARGET, please check if it is running."
+
+# Wait for device authorization
+echo "Waiting for device authorization..."
+echo "Please check the Android device and accept the debugging authorization dialog."
+while true; do
+    status=$(adb devices | grep "$ADB_TARGET" | awk '{print $2}')
+    if [ "$status" = "device" ]; then
+        echo "Device authorized and connected!"
+        break
+    fi
+    echo "Current status: $status. Waiting..."
+    sleep 2
+done
+
+echo "----------------------------------------------------------------"
+echo "Android build starting on emulator..."
+echo ""
+echo "To run on iOS simultaneously:"
+echo "   1. Open a new terminal on your Mac host."
+echo "   2. Navigate to this project directory."
+echo "   3. Run: flutter run -d <your_iphone_device_id>"
+echo "----------------------------------------------------------------"
+
+# Create a FIFO for sending hot reload commands to flutter run's stdin
+FLUTTER_FIFO="/tmp/flutter_stdin"
+rm -f "$FLUTTER_FIFO"
+mkfifo "$FLUTTER_FIFO"
+
+# Start file watcher that triggers hot reload on .dart file changes
+echo "Starting hot reload file watcher..."
+"$(dirname "$0")/watch-reload" &
+
+# Launch Flutter app with stdin from the FIFO.
+# 'tail -f' keeps the FIFO open so multiple writes don't close stdin.
+echo "Launching Flutter app..."
+exec tail -f "$FLUTTER_FIFO" | flutter run -d "$ADB_TARGET"

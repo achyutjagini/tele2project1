@@ -1,0 +1,14 @@
+include:
+  - repo: gh:bluetext-io/bluetext
+  - services/couchbase-server
+  - services/service-config-manager
+  - services/sync-gateway
+  - services/flutter-dev-container
+tools:
+  stack:
+    run:
+      - tool: load-config
+      - tool: couchbase-server
+      - tool: service-config-manager
+      - tool: sync-gateway
+      - tool: "flutter-dev-container"

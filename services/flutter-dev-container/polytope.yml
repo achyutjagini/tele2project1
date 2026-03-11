@@ -1,0 +1,34 @@
+tools:
+  flutter-dev-container:
+    info: Flutter dev container with Android/iOS support and Couchbase Lite P2P
+    inputs:
+      restart-policy:
+        info: Restart policy for the container
+        type: [default, [enum, always, on-failure, never], always]
+    run:
+      - tool: polytope/python
+        args:
+          id: flutter-dev-container
+          create: when-missing
+          image: ghcr.io/cirruslabs/flutter:stable
+          code: { type: repo, path: . }
+          cmd: ./bin/run
+          restart:
+            policy: pt.input restart-policy
+          services:
+            - id: flutter-dev-container
+              ports:
+                - { protocol: tcp, port: pt.value flutter-dev-container-web-port, expose-as: pt.value flutter-dev-container-web-port }
+          env:
+            - { name: CHOKIDAR_USEPOLLING, value: "true" }
+            - { name: SYNC_GATEWAY_URL, value: pt.value flutter-dev-container-sync-gateway-url }
+            - { name: ADB_TARGET, value: pt.value flutter-dev-container-adb-target }
+          mounts:
+            - { path: /root/.pub-cache, source: { type: volume, scope: project, id: flutter-dev-container-pub-cache }}
+            - { path: /root/.gradle, source: { type: volume, scope: project, id: flutter-dev-container-gradle-cache }}
+            - { path: /opt/deps-cache, source: { type: volume, scope: project, id: flutter-dev-container-deps-cache }}
+            - { path: /opt/android-sdk-linux/ndk, source: { type: volume, scope: project, id: flutter-dev-container-android-ndk }}
+            - { path: /opt/android-sdk-linux/build-tools, source: { type: volume, scope: project, id: flutter-dev-container-android-build-tools }}
+            - { path: /opt/android-sdk-linux/platforms, source: { type: volume, scope: project, id: flutter-dev-container-android-platforms }}
+            - { path: /opt/android-sdk-linux/cmake, source: { type: volume, scope: project, id: flutter-dev-container-android-cmake }}
+            - { path: /app/build, source: { type: volume, scope: project, id: flutter-dev-container-build-output }}
