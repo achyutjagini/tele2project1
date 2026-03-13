@@ -8,5 +8,8 @@ wsl -d Ubuntu
 then 
 pt run stack --mcp to run it
 
-use wsl terminal on windows
+use wsl terminal on windows and run these commands
+export PATH="$PATH:/root/.local/bin"
+cd /mnt/c/Users/achyu/OneDrive/Desktop/tele2project1-main
+pt run stack --mcp
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/09d734b7-79b6-4852-8db2-9a5a8c3eee73" />
