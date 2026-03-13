@@ -14,3 +14,4 @@ cd /mnt/c/Users/achyu/OneDrive/Desktop/tele2project1-main <br>
 pt run stack --mcp <br>
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/bcc7ac25-748a-4fb6-9052-1dfab14a54b2" />
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/09d734b7-79b6-4852-8db2-9a5a8c3eee73" />
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/038c6495-83ac-4b36-af94-a0b4ebaf11d1" />
